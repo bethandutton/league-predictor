@@ -8,7 +8,7 @@ export const GENERATED_LEAGUES: League[] = [
     country: "England",
     season: "2026/27",
     logo: "/competitions/premier-league.svg",
-    theme: {"page":"#37003c","accent":"#00ff87","accentInk":"#0b0b0b"},
+    theme: {"page":"#37003c","accent":"#00a651","accentInk":"#ffffff"},
     zones: [
       {"from":1,"to":4,"label":"Champions League","colour":"#102de6"},
       {"from":5,"to":5,"label":"Europa League","colour":"#ff6900"},
