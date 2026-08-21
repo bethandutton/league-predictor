@@ -11,7 +11,7 @@ const PLAYOFF = "#953bff";
 
 export const LEAGUE_CONFIG = [
   { id: "premier-league", espn: "eng.1", source: "premierleague", name: "Premier League", country: "England",
-    theme: { page: "#37003c", accent: "#00ff87" },
+    theme: { page: "#37003c", accent: "#00a651" },
     zones: [[1, 4, "Champions League", UCL], [5, 5, "Europa League", UEL], [6, 6, "Conference League", UECL], [18, 20, "Relegation", DOWN]] },
 
   { id: "championship", espn: "eng.2", name: "Championship", country: "England",

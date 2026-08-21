@@ -2,6 +2,7 @@
 // Builds the whole competition catalogue: club lists, club badges and competition logos.
 // Re-run at the start of a season to pick up promotions and relegations: `pnpm leagues`
 
+import { existsSync } from "node:fs";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { optimize } from "svgo";
@@ -10,6 +11,9 @@ import { LEAGUE_CONFIG } from "./leagues.config.mjs";
 const LOGO_ROOT = path.join(process.cwd(), "public", "logos");
 const COMPETITION_ROOT = path.join(process.cwd(), "public", "competitions");
 const OUT_FILE = path.join(process.cwd(), "src", "lib", "leagues.generated.ts");
+
+// `--reuse-assets` keeps the badges already on disk and only rebuilds the generated data file.
+const REUSE_ASSETS = process.argv.includes("--reuse-assets");
 
 const ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 const PL_API = "https://footballapi.pulselive.com/football";
@@ -26,6 +30,7 @@ async function getJson(url, headers = {}) {
 }
 
 async function download(url, destination) {
+  if (REUSE_ASSETS && existsSync(destination)) return 0;
   const response = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
   if (!response.ok) throw new Error(`${response.status} for ${url}`);
   const buffer = Buffer.from(await response.arrayBuffer());
@@ -60,8 +65,11 @@ async function premierLeagueTeams(directory) {
     const optaId = club.altIds?.opta;
     const slug = slugify(club.name);
 
-    const svg = await (await fetch(`https://resources.premierleague.com/premierleague/badges/${optaId}.svg`)).text();
-    await writeFile(path.join(directory, `${slug}.svg`), optimize(svg, { multipass: true }).data);
+    const svgFile = path.join(directory, `${slug}.svg`);
+    if (!(REUSE_ASSETS && existsSync(svgFile))) {
+      const svg = await (await fetch(`https://resources.premierleague.com/premierleague/badges/${optaId}.svg`)).text();
+      await writeFile(svgFile, optimize(svg, { multipass: true }).data);
+    }
     await download(`https://resources.premierleague.com/premierleague/badges/100/${optaId}.png`, path.join(directory, `${slug}.png`));
 
     teams.push({
@@ -103,8 +111,11 @@ async function espnTeams(config, directory) {
     }
     if (!downloaded) {
       file = `${slug}.svg`;
-      await writeFile(path.join(directory, file), placeholderBadge(abbr));
-      console.log(`    placeholder badge for ${team.displayName}`);
+      const placeholder = path.join(directory, file);
+      if (!(REUSE_ASSETS && existsSync(placeholder))) {
+        await writeFile(placeholder, placeholderBadge(abbr));
+        console.log(`    placeholder badge for ${team.displayName}`);
+      }
     }
 
     teams.push({
@@ -126,12 +137,18 @@ async function competitionLogo(config) {
   await mkdir(COMPETITION_ROOT, { recursive: true });
 
   if (config.source === "premierleague") {
-    const svg = await (
-      await fetch("https://www.premierleague.com/resources/v1.51.4/i/svg-files/elements/pl-logo-dark.svg")
-    ).text();
     const file = path.join(COMPETITION_ROOT, `${config.id}.svg`);
-    await writeFile(file, optimize(svg, { multipass: true }).data);
+    if (!(REUSE_ASSETS && existsSync(file))) {
+      const svg = await (
+        await fetch("https://www.premierleague.com/resources/v1.51.4/i/svg-files/elements/pl-logo-dark.svg")
+      ).text();
+      await writeFile(file, optimize(svg, { multipass: true }).data);
+    }
     return `/competitions/${config.id}.svg`;
+  }
+
+  if (REUSE_ASSETS && existsSync(path.join(COMPETITION_ROOT, `${config.id}.png`))) {
+    return `/competitions/${config.id}.png`;
   }
 
   const board = await getJson(`${ESPN}/${config.espn}/scoreboard`);
@@ -148,7 +165,7 @@ const built = [];
 
 for (const config of LEAGUE_CONFIG) {
   const directory = path.join(LOGO_ROOT, config.id);
-  await rm(directory, { recursive: true, force: true });
+  if (!REUSE_ASSETS) await rm(directory, { recursive: true, force: true });
   await mkdir(directory, { recursive: true });
 
   const { teams, season } =
