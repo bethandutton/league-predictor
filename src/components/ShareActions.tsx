@@ -61,7 +61,7 @@ export function ShareActions({ league, order, name, submittedAt }: ShareActionsP
       <button
         type="button"
         onClick={handleCopyLink}
-        className="h-12 flex-1 rounded-xl border border-white/20 px-5 text-base font-semibold text-[var(--page-ink)] hover:bg-white/10"
+        className="h-12 flex-1 rounded-xl border border-[var(--control-border)] bg-[var(--control-bg)] px-5 text-base font-semibold text-[var(--page-ink)]"
       >
         {status === "copied" ? "Link copied" : "Copy link"}
       </button>

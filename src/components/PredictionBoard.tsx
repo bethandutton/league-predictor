@@ -42,7 +42,7 @@ function SortableRow({ team, position, zone, isFirst, isLast, onMove }: Sortable
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={`flex items-center gap-2.5 rounded-xl bg-[var(--card)] py-2 pr-1.5 pl-2 sm:gap-3 sm:pr-2 ${
+      className={`flex items-center gap-2.5 rounded-xl bg-[var(--card)] py-2 pr-1.5 pl-2 ring-1 ring-[var(--card-ring)] sm:gap-3 sm:pr-2 ${
         isDragging ? "relative z-10 shadow-2xl ring-2 ring-[var(--accent)]" : ""
       }`}
     >
@@ -155,7 +155,7 @@ export function PredictionBoard({ league }: { league: League }) {
         </SortableContext>
       </DndContext>
 
-      <div className="mt-6 border-t border-white/10 pt-6">
+      <div className="mt-6 border-t border-[var(--hairline)] pt-6">
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-end">
           <div className="flex-1">
             <label htmlFor="predictor-name" className="mb-1 block text-xs font-semibold opacity-70">
@@ -172,7 +172,7 @@ export function PredictionBoard({ league }: { league: League }) {
               autoComplete="name"
               aria-invalid={showNameError}
               aria-describedby={showNameError ? "predictor-name-error" : undefined}
-              className="h-12 w-full rounded-xl border border-white/15 bg-white/10 px-3.5 text-base text-[var(--page-ink)] placeholder:opacity-40 focus:border-[var(--focus)] focus:outline-none"
+              className="h-12 w-full rounded-xl border border-[var(--control-border)] bg-[var(--control-bg)] px-3.5 text-base text-[var(--page-ink)] placeholder:opacity-50 focus:border-[var(--focus)] focus:outline-none"
             />
           </div>
           <button
@@ -183,7 +183,7 @@ export function PredictionBoard({ league }: { league: League }) {
           </button>
         </div>
         {showNameError ? (
-          <p id="predictor-name-error" role="alert" className="mt-2 text-xs font-medium text-[var(--accent)]">
+          <p id="predictor-name-error" role="alert" className="mt-2 text-xs font-medium text-[var(--accent-text)]">
             Pop your name in first so people know whose prediction this is.
           </p>
         ) : null}

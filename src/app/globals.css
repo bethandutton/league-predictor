@@ -5,17 +5,50 @@
 }
 
 :root {
-  --page: #0e1013;
-  --page-ink: #ffffff;
+  color-scheme: light dark;
+
+  /* Fallback competition colours for pages without a league theme. */
+  --page-light: #f4f5f7;
+  --page-dark: #0e1013;
+  --accent-base: #00a651;
+  --accent-ink: #ffffff;
+  --accent-on-light: #04703c;
+  --accent-on-dark: #34d17e;
+}
+
+/*
+ * Resolves the light and dark values into the tokens components actually use. It lives on a class
+ * rather than :root so that a league page can set its own colours on the same element and have
+ * them picked up here.
+ */
+.themed {
+  --page: var(--page-light);
+  --page-ink: #14161a;
   --card: #ffffff;
   --card-ink: #14161a;
   --card-muted: #6b6f76;
+  --card-ring: rgb(0 0 0 / 0.09);
+  --control-bg: rgb(0 0 0 / 0.04);
+  --control-border: rgb(0 0 0 / 0.16);
+  --hairline: rgb(0 0 0 / 0.1);
   --row-hover: #f2f4f7;
-  --accent: #00ff87;
-  --accent-ink: #0b0b0b;
-  --focus: #05f0ff;
+  --accent: var(--accent-base);
+  --accent-text: var(--accent-on-light);
+  --focus: #0b6bcb;
 }
 
+@media (prefers-color-scheme: dark) {
+  .themed {
+    --page: var(--page-dark);
+    --page-ink: #ffffff;
+    --card-ring: transparent;
+    --control-bg: rgb(255 255 255 / 0.08);
+    --control-border: rgb(255 255 255 / 0.2);
+    --hairline: rgb(255 255 255 / 0.14);
+    --accent-text: var(--accent-on-dark);
+    --focus: var(--accent-on-dark);
+  }
+}
 
 body {
   background: var(--page);

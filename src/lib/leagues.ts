@@ -1,4 +1,5 @@
 import { GENERATED_LEAGUES } from "./leagues.generated";
+import { resolveTheme } from "./theme";
 import type { League, Zone } from "./types";
 
 export const LEAGUES = GENERATED_LEAGUES;
@@ -21,11 +22,18 @@ export function leaguesByCountry(): { country: string; leagues: League[] }[] {
   return [...grouped].map(([country, leagues]) => ({ country, leagues }));
 }
 
-/** Per-competition colours are data, so they ride in as custom properties. */
+/**
+ * Per-competition colours are data, so they ride in as custom properties. Both the light and
+ * dark values are set here; `globals.css` picks between them for the viewer's colour scheme.
+ */
 export function leagueThemeStyle(league: League): React.CSSProperties {
+  const theme = resolveTheme(league.theme.page, league.theme.accent, league.theme.accentInk);
   return {
-    "--page": league.theme.page,
-    "--accent": league.theme.accent,
-    "--accent-ink": league.theme.accentInk,
+    "--page-dark": theme.pageDark,
+    "--page-light": theme.pageLight,
+    "--accent-base": theme.accent,
+    "--accent-ink": theme.accentInk,
+    "--accent-on-dark": theme.accentOnDark,
+    "--accent-on-light": theme.accentOnLight,
   } as React.CSSProperties;
 }

@@ -8,7 +8,7 @@ export function LeagueTablePreview({ league, order }: { league: League; order: T
       {order.map((team, index) => (
         <li
           key={team.id}
-          className="flex items-center gap-3 rounded-xl bg-[var(--card)] py-2.5 pr-4 pl-2"
+          className="flex items-center gap-3 rounded-xl bg-[var(--card)] py-2.5 pr-4 pl-2 ring-1 ring-[var(--card-ring)]"
         >
           <LeagueTableRow position={index + 1} team={team} zone={zoneForPosition(league, index + 1)} />
         </li>
