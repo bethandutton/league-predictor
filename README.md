@@ -1,5 +1,7 @@
 # League Predictor
 
+**Live at [league-predictor.vercel.app](https://league-predictor.vercel.app)**
+
 Pick a competition, drag the clubs into the order you reckon they will finish, then share your table
 as a link or an image. Nothing is stored — the prediction, the name and the timestamp all travel
 inside the URL, so a shared link always opens the same table.
