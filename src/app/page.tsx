@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteFooter } from "@/components/SiteFooter";
 import { LEAGUES, leagueThemeStyle, leaguesByCountry } from "@/lib/leagues";
+import { SITE_DESCRIPTION } from "@/lib/site";
+
+export const metadata: Metadata = {
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+};
 
 export default function CompetitionPicker() {
   const season = LEAGUES[0]?.season;
@@ -11,7 +19,7 @@ export default function CompetitionPicker() {
           League Predictor
         </h1>
         {season ? (
-          <p className="text-sm font-bold tracking-[0.2em] text-[var(--accent)] uppercase">
+          <p className="text-sm font-bold tracking-[0.2em] text-[var(--accent-text)] uppercase">
             {season} season
           </p>
         ) : null}
@@ -32,7 +40,7 @@ export default function CompetitionPicker() {
                   <Link
                     href={`/${league.id}`}
                     style={leagueThemeStyle(league)}
-                    className="flex items-center gap-4 rounded-2xl bg-[var(--page)] p-4 ring-1 ring-white/15 transition-transform hover:-translate-y-0.5"
+                    className="flex items-center gap-4 rounded-2xl bg-[var(--page-dark)] p-4 ring-1 ring-white/15 transition-transform hover:-translate-y-0.5"
                   >
                     {league.logo ? (
                       /* Static local artwork — next/image has nothing to optimise here. */
@@ -40,7 +48,7 @@ export default function CompetitionPicker() {
                       <img src={league.logo} alt="" aria-hidden className="h-8 w-8 shrink-0 object-contain" />
                     ) : null}
                     <span className="text-base font-bold text-white">{league.name}</span>
-                    <span aria-hidden className="ml-auto text-[var(--accent)]">
+                    <span aria-hidden className="ml-auto text-[var(--accent-on-dark)]">
                       →
                     </span>
                   </Link>
@@ -50,6 +58,8 @@ export default function CompetitionPicker() {
           </section>
         ))}
       </div>
+
+      <SiteFooter />
     </main>
   );
 }
